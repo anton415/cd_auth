@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="016" author="Codex">
+        <update tableName="profile">
+            <column name="username" value="Иванов Иван Иванович"/>
+            <where>email = 'root@checkdev.ru'</where>
+        </update>
+        <update tableName="profile">
+            <column name="username" value="Петров Петр Петрович"/>
+            <where>email = 'junior@checkdev.ru'</where>
+        </update>
+        <update tableName="profile">
+            <column name="username" value="Сидоров Сергей Павлович"/>
+            <where>email = 'middle@checkdev.ru'</where>
+        </update>
+        <update tableName="profile">
+            <column name="username" value="Кузнецов Алексей Викторович"/>
+            <where>email = 'senior@checkdev.ru'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

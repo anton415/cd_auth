@@ -20,4 +20,5 @@
     <include file="changelog/013_dml_table_profile_add_column_notified.xml" relativeToChangelogFile="true"/>
     <include file="changelog/014_ddl_drop_tables_orders_setting_template.xml" relativeToChangelogFile="true"/>
     <include file="changelog/015_ddl_profile_drop_column_notification.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/016_dml_profile_update_demo_usernames.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
