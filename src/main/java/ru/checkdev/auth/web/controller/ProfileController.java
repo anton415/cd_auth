@@ -69,6 +69,14 @@ public class ProfileController {
                 profileDTO.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
+    @PostMapping("/tg/byEmail")
+    public ResponseEntity<ProfileTgDTO> getProfileTgByEmail(@RequestBody Profile profile) {
+        var profileDTO = profileService.findProfileTgByEmail(profile.getEmail());
+        return new ResponseEntity<>(
+                profileDTO.orElse(new ProfileTgDTO()),
+                profileDTO.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
     @PostMapping("/tg/byEmailAndPassword")
     public ResponseEntity<ProfileTgDTO> getProfileTgByEmailAndPassword(@RequestBody Profile profile) {
         var profileDTO = profileService.findProfileTgByEmailAndPassword(profile.getEmail(), profile.getPassword());

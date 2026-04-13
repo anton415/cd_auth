@@ -47,6 +47,16 @@ public class ProfileService {
         return Optional.ofNullable(personRepository.findProfileTgById(id));
     }
 
+    public Optional<ProfileTgDTO> findProfileTgByEmail(String email) {
+        Profile profile = personRepository.findByEmail(email);
+        return Optional.ofNullable(profile)
+                .map(value -> new ProfileTgDTO(
+                        value.getId(),
+                        value.getUsername(),
+                        value.getEmail()
+                ));
+    }
+
     public Optional<ProfileTgDTO> findProfileTgByEmailAndPassword(String email, String password) {
         Optional<ProfileTgDTO> result = Optional.empty();
         Profile profile = personRepository.findByEmail(email);
