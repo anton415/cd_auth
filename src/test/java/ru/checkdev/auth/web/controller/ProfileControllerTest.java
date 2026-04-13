@@ -1,5 +1,6 @@
 package ru.checkdev.auth.web.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.checkdev.auth.AuthSrv;
+import ru.checkdev.auth.dto.ProfileTgDTO;
 import ru.checkdev.auth.dto.ProfileDTO;
 import ru.checkdev.auth.service.ProfileService;
 
@@ -21,6 +23,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,6 +48,7 @@ public class ProfileControllerTest {
             1, "name1", "experience1", 1, null, null);
     private final ProfileDTO profileDTO2 = new ProfileDTO(
             2, "name2", "experience2", 2, null, null);
+    private final ProfileTgDTO profileTgDTO = new ProfileTgDTO(1, "name1", "name1@mail.ru");
 
     @Test
     @WithMockUser
@@ -88,6 +92,35 @@ public class ProfileControllerTest {
         when(profileService.findProfilesOrderByCreatedDesc()).thenReturn(Collections.emptyList());
         mockMvc.perform(get("/profiles/")
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("При получении профиля по email, если профиль найден, то возвращаем статус OK и тело ответа с ProfileTgDTO")
+    public void whenPostProfileTgByEmailThenReturnStatusOkAndBody() throws Exception {
+        when(profileService.findProfileTgByEmail(profileTgDTO.getEmail())).thenReturn(Optional.of(profileTgDTO));
+
+        mockMvc.perform(post("/profiles/tg/byEmail")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + profileTgDTO.getEmail() + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(profileTgDTO.getId()))
+                .andExpect(jsonPath("$.username").value(profileTgDTO.getUsername()))
+                .andExpect(jsonPath("$.email").value(profileTgDTO.getEmail()))
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("При получении профиля по email, если профиль не найден, то возвращаем статус NO_CONTENT")
+    public void whenPostProfileTgByEmailProfileNotFoundThenReturnStatusNoContent() throws Exception {
+        when(profileService.findProfileTgByEmail(profileTgDTO.getEmail())).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/profiles/tg/byEmail")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + profileTgDTO.getEmail() + "\"}"))
                 .andExpect(status().isNoContent())
                 .andDo(print());
     }

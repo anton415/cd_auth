@@ -47,6 +47,23 @@ public class ProfileService {
         return Optional.ofNullable(personRepository.findProfileTgById(id));
     }
 
+    /**
+     * Получить ProfileTgDTO по email
+     * @param email String
+     * @return Optional<ProfileTgDTO>
+     */
+    public Optional<ProfileTgDTO> findProfileTgByEmail(String email) {
+        // Проверяем, занят ли email, для регистрации
+        Profile profile = personRepository.findByEmail(email);
+        if (profile == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new ProfileTgDTO(
+                profile.getId(),
+                profile.getUsername(),
+                profile.getEmail()));
+    }
+
     public Optional<ProfileTgDTO> findProfileTgByEmailAndPassword(String email, String password) {
         Optional<ProfileTgDTO> result = Optional.empty();
         Profile profile = personRepository.findByEmail(email);

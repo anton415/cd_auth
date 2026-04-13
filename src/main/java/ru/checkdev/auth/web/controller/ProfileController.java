@@ -69,6 +69,20 @@ public class ProfileController {
                 profileDTO.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
+    /**
+     * Обрабатывает post запрос на получение профиля пользователя по email.
+     * @param profile Profile с email
+     * @return ResponseEntity<ProfileTgDTO>
+     */
+    @PostMapping("/tg/byEmail")
+    public ResponseEntity<ProfileTgDTO> getProfileTgByEmail(@RequestBody Profile profile) {
+        // Возвращаем профиль, если email уже используется, иначе отдаем 204.
+        var profileDTO = profileService.findProfileTgByEmail(profile.getEmail());
+        return new ResponseEntity<>(
+                profileDTO.orElse(new ProfileTgDTO()),
+                profileDTO.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
     @PostMapping("/tg/byEmailAndPassword")
     public ResponseEntity<ProfileTgDTO> getProfileTgByEmailAndPassword(@RequestBody Profile profile) {
         var profileDTO = profileService.findProfileTgByEmailAndPassword(profile.getEmail(), profile.getPassword());
